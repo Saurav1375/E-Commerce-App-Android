@@ -1,16 +1,11 @@
 package com.example.e_commerceapp.core.navigation
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
@@ -32,7 +27,9 @@ import com.example.e_commerceapp.auth.presentation.register.RegisterScreen
 import com.example.e_commerceapp.auth.presentation.register.RegisterViewModel
 import com.example.e_commerceapp.core.presentation.util.ObserveAsEvents
 import com.example.e_commerceapp.core.presentation.util.toString
-import kotlinx.coroutines.launch
+import com.example.e_commerceapp.ecommerce.presentation.home_screen.HomeScreen
+import com.example.e_commerceapp.ecommerce.presentation.home_screen.ProductEvent
+import com.example.e_commerceapp.ecommerce.presentation.home_screen.ProductsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -196,30 +193,28 @@ fun NavigationGraph(
         composable(route = Screen.HomeScreen.route) {
             val context =  LocalContext.current
             val scope = rememberCoroutineScope()
+            val productViewModel = koinViewModel<ProductsViewModel>()
+            val state by productViewModel.state.collectAsStateWithLifecycle()
 
-            //logout button
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Button(
-                    onClick = {
-                        navController.navigate(Screen.LoginScreen.route)
-                        scope.launch {
-                            loginViewModel.logout()
-                        }
+            ObserveAsEvents(events = productViewModel.events) { event ->
+                when(event) {
+                    is ProductEvent.Error -> {
                         Toast.makeText(
                             context,
-                            "Logout Successful",
+                            event.error.toString(context),
                             Toast.LENGTH_LONG
                         ).show()
-                    }) {
-                    Text(text = "Logout")
+                    }
                 }
             }
 
-
+            HomeScreen(
+                state = state,
+                onAction = productViewModel::onAction,
+                modifier = modifier
+            )
         }
+
 
     }
 

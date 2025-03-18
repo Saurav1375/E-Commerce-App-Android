@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -55,6 +56,8 @@ dependencies {
 
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.data.store)
+    implementation(libs.coil.core)
+    implementation(libs.coil.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

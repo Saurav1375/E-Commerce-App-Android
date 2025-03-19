@@ -54,6 +54,9 @@ fun HomeScreen(
         ProductsListingSection(
             products = products,
             sectionHeading = state.selectedCategory?.name?.capitalizeFirstLetter() ?: "Flash Sale",
+            onProductClick = {
+                onAction(ProductAction.OnProductSelected(it))
+            },
             modifier = Modifier.padding(top = 24.dp)
         )
     }

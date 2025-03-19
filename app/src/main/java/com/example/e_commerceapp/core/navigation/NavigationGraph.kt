@@ -28,8 +28,10 @@ import com.example.e_commerceapp.auth.presentation.register.RegisterViewModel
 import com.example.e_commerceapp.core.presentation.util.ObserveAsEvents
 import com.example.e_commerceapp.core.presentation.util.toString
 import com.example.e_commerceapp.ecommerce.presentation.home_screen.HomeScreen
+import com.example.e_commerceapp.ecommerce.presentation.home_screen.ProductAction
 import com.example.e_commerceapp.ecommerce.presentation.home_screen.ProductEvent
 import com.example.e_commerceapp.ecommerce.presentation.home_screen.ProductsViewModel
+import com.example.e_commerceapp.ecommerce.presentation.productDetails_screen.ProductDetailScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -38,6 +40,7 @@ fun NavigationGraph(
     modifier: Modifier = Modifier
 ) {
     val loginViewModel = koinViewModel<LoginViewModel>()
+    val productViewModel = koinViewModel<ProductsViewModel>()
     NavHost(
         navController = navController,
         startDestination = Screen.LoginScreen.route,
@@ -193,7 +196,6 @@ fun NavigationGraph(
         composable(route = Screen.HomeScreen.route) {
             val context =  LocalContext.current
             val scope = rememberCoroutineScope()
-            val productViewModel = koinViewModel<ProductsViewModel>()
             val state by productViewModel.state.collectAsStateWithLifecycle()
 
             ObserveAsEvents(events = productViewModel.events) { event ->
@@ -210,8 +212,44 @@ fun NavigationGraph(
 
             HomeScreen(
                 state = state,
-                onAction = productViewModel::onAction,
+                onAction = { action ->
+                    productViewModel.onAction(action)
+                    when(action) {
+                        is ProductAction.OnProductSelected -> {
+                            navController.navigate(
+                                Screen.ProductDetailScreen.route
+                            )
+                        }
+                        else -> Unit
+                    }
+                },
                 modifier = modifier
+            )
+        }
+
+        composable(route = Screen.ProductDetailScreen.route) {
+            val context =  LocalContext.current
+            val scope = rememberCoroutineScope()
+            val state by productViewModel.state.collectAsStateWithLifecycle()
+            ObserveAsEvents(events = productViewModel.events) { event ->
+                when(event) {
+                    is ProductEvent.Error -> {
+                        Toast.makeText(
+                            context,
+                            event.error.toString(context),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+
+            ProductDetailScreen(
+                modifier = modifier,
+                state = state,
+                onAction = productViewModel::onAction,
+                onBackPressed = {
+                    navController.popBackStack()
+                },
             )
         }
 

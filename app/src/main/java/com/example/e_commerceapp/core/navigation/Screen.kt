@@ -8,5 +8,7 @@ sealed class Screen(
     data object ActivationScreen : Screen("activation_screen")
     data object HomeScreen : Screen("home_screen")
     data object CategoryScreen : Screen("category_screen")
-
+    data object ProductDetailScreen : Screen("product_detail_screen")
+    data object CartScreen : Screen("cart_screen")
+    data object ProfileScreen : Screen("profile_screen")
 }

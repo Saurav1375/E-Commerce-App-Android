@@ -31,6 +31,7 @@ import com.example.e_commerceapp.ecommerce.presentation.models.ProductUi
 fun ProductsListingSection(
     products: List<ProductUi>,
     sectionHeading : String,
+    onProductClick: (ProductUi) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -68,71 +69,12 @@ fun ProductsListingSection(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(products) { product ->
-                ProductCard(product = product)
+                ProductCard(
+                    product = product,
+                    onProductClick = onProductClick
+                )
             }
         }
     }
 }
 
-@Composable
-fun ProductCard(
-    product: ProductUi,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .width(170.dp)
-            .clickable { /* Navigate to product details */ },
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Box {
-            Column {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(170.dp)
-                ) {
-                    AsyncImage(
-                        model = ImageRequest
-                            .Builder(LocalContext.current)
-                            .data(product.imageUrl)
-                            .placeholder(
-                                R.drawable.ic_launcher_foreground
-                            )
-                            .build(),
-                        contentDescription = product.name,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-
-                }
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp)
-                ) {
-                    Text(
-                        text = product.name,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Black
-                    )
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-
-                        Text(
-                            text = "$ ${product.priceUsd.formatted}",
-                            fontSize = 14.sp,
-                            color = Color.Black,
-                        )
-                    }
-                }
-            }
-        }
-    }
-}

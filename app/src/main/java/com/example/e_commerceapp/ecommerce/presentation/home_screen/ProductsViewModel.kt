@@ -64,17 +64,32 @@ class ProductsViewModel(
                 }
             }
             is ProductAction.OnProductSelected -> {
-                _state.update {
-                    it.copy(
-                        selectedProduct = action.product
-                    )
-                }
-
+                _state.update { it.copy(selectedProduct = action.product) }
             }
 
         }
 
     }
+//    private fun loadSelectedProduct(
+//        productUi: ProductUi
+//    ) {
+//        _state.update { it.copy(selectedProduct = productUi) }
+//        viewModelScope.launch {
+//            productService.getProductById(productUi.productId)
+//                .onSuccess { product ->
+//                    _state.update {
+//                        it.copy(
+//                            selectedProduct = product.toProductUi()
+//                        )
+//                    }
+//                }
+//                .onError {
+//                    _events.send(ProductEvent.Error(it))
+//                }
+//
+//
+//        }
+//    }
 
     private fun loadProducts() {
         viewModelScope.launch {

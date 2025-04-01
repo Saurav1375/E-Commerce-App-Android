@@ -23,7 +23,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://10.50.47.139:8010/api/v1/\"")
+            buildConfigField("String", "BASE_URL", "\"https://ecommerce-1mfu.onrender.com/api/v1/\"")
         }
         release {
             isMinifyEnabled = false
@@ -31,7 +31,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "BASE_URL", "\"http://10.50.47.139:8010/api/v1/\"")
+            buildConfigField("String", "BASE_URL", "\"https://ecommerce-1mfu.onrender.com/api/v1/\"")
         }
     }
     compileOptions {
@@ -52,12 +52,14 @@ dependencies {
     debugImplementation(libs.bundles.compose.debug)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+
+
     implementation(libs.bundles.koin)
 
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.data.store)
-    implementation(libs.coil.core)
-    implementation(libs.coil.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
